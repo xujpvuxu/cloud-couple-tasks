@@ -12,4 +12,20 @@
 .reward-actions{display:flex;justify-content:center;gap:8px;margin-top:12px}
 .reward-actions button{margin:0!important;padding:7px 13px;border:1px solid #e1ebf0;border-radius:9px;background:#f5fafc;color:#6f94a9;font-size:10px}
 .reward-actions .reward-delete{border-color:#f0e2e2;background:#fdf7f7;color:#ad8585}
+.center-pup{width:225px;height:225px}
+.center-pup .center-pup-icon{width:210px;height:210px}
+.sidepup .side-pup-icon{width:138px;height:138px}
+.redemption-panel{margin:12px 0;padding:15px;background:#fbfdfe;border:1px solid #e9f0f4;border-radius:13px}
+.redemption-panel h3{margin:0 0 10px;color:#708397;font-size:12px}
+.redemption-item{display:flex;align-items:center;gap:9px;padding:10px 0;border-top:1px solid #edf2f5}
+.redemption-emoji{font-size:24px}
+.redemption-info{flex:1;text-align:left}
+.redemption-info b,.redemption-info small{display:block}
+.redemption-info b{color:#64788b;font-size:11px}
+.redemption-info small{margin-top:4px;color:#9baab7;font-size:9px}
+.redemption-item button{padding:7px 10px;border:1px solid #deebf1;border-radius:8px;background:#f3f9fb;color:#6f94a9;font-size:9px}
+.redemption-item .redeem-reject{border-color:#f0e3e3;background:#fcf7f7;color:#ad8585}
+.reward-actions .redeem-button{border-color:#d9eaf2;background:#edf7fb;color:#5f92ad}
+.reward-actions .redeem-button:disabled{border-color:#edf0f2;background:#f6f7f8;color:#aab4bc;cursor:not-allowed}
+@media(max-width:700px){.center-pup{width:145px;height:155px}.center-pup .center-pup-icon{width:140px;height:140px}.sidepup .side-pup-icon{width:112px;height:112px}.redemption-item{gap:6px}.redemption-item button{padding:7px}}
 .invite-code-box{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0;padding:10px 11px 10px 16px;border:1px solid #dceaf1;border-radius:12px;background:linear-gradient(120deg,#f2f9fc,#f8f5fa)}.invite-code-box strong{font:800 21px "Nunito",sans-serif;letter-spacing:4px;color:#668da7}.copy-invite{border:1px solid #d9e9f0;border-radius:9px;background:white;color:#7096ab;padding:8px 13px;font-size:10px;font-weight:800;box-shadow:0 2px 8px #769eb012}.copy-invite:hover{background:#edf6fa;border-color:#bfd9e5}

@@ -54,6 +54,33 @@ service cloud.firestore {
         allow delete: if isPairMember(pairId);
       }
 
+      match /redemptions/{redemptionId} {
+        function validRedemption(data) {
+          return data.keys().hasOnly(['pairId', 'rewardId', 'title', 'emoji', 'points', 'requesterId', 'approverId', 'status', 'createdAt']) &&
+            data.pairId == pairId && data.rewardId is string &&
+            data.title is string && data.title.size() > 0 &&
+            data.emoji is string && data.points is int && data.points >= 0 &&
+            data.requesterId == request.auth.uid && data.approverId is string &&
+            data.approverId != request.auth.uid &&
+            data.approverId in [
+              get(/databases/$(database)/documents/pairs/$(pairId)).data.ownerId,
+              get(/databases/$(database)/documents/pairs/$(pairId)).data.partnerId
+            ] && data.status == 'pending' && data.createdAt is timestamp &&
+            exists(/databases/$(database)/documents/pairs/$(pairId)/rewards/$(data.rewardId)) &&
+            get(/databases/$(database)/documents/pairs/$(pairId)/rewards/$(data.rewardId)).data.title == data.title &&
+            get(/databases/$(database)/documents/pairs/$(pairId)/rewards/$(data.rewardId)).data.emoji == data.emoji &&
+            get(/databases/$(database)/documents/pairs/$(pairId)/rewards/$(data.rewardId)).data.points == data.points;
+        }
+        allow read: if isPairMember(pairId);
+        allow create: if isPairMember(pairId) && validRedemption(request.resource.data);
+        allow update: if isPairMember(pairId) &&
+          resource.data.status == 'pending' &&
+          request.auth.uid == resource.data.approverId &&
+          request.resource.data.status in ['approved', 'rejected'] &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'reviewedAt']);
+        allow delete: if false;
+      }
+
       match /settings/{settingId} {
         allow read: if isPairMember(pairId);
         allow create: if isPairMember(pairId) && settingId == 'rewards' &&

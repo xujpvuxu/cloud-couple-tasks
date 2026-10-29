@@ -5,10 +5,11 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndP
 import { addDoc, collection, doc, onSnapshot, runTransaction, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore'
 
 const iconFiles = [...Array.from({length:23},(_,i)=>String(i+1).padStart(2,'0')+'.webp'),'24.jpg']
-const pickedIcons = [...iconFiles].sort(()=>Math.random()-.5).slice(0,5).map(file=>'/icons/'+encodeURIComponent(file))
-const randomSideIcon = '/icons/'+encodeURIComponent(iconFiles[Math.floor(Math.random()*iconFiles.length)])
+const assetUrl = path => import.meta.env.BASE_URL + path.replace(/^\//,'')
+const pickedIcons = [...iconFiles].sort(()=>Math.random()-.5).slice(0,5).map(file=>assetUrl('icons/'+encodeURIComponent(file)))
+const randomSideIcon = assetUrl('icons/'+encodeURIComponent(iconFiles[Math.floor(Math.random()*iconFiles.length)]))
 const tabs = ['首頁','任務','集點卡','紀錄','兌換'].map((label,i)=>[pickedIcons[i],label])
-const backgroundImage = ['/backgrounds/762884.jpg','/backgrounds/762889.jpg'][Math.floor(Math.random()*2)]
+const backgroundImage = assetUrl(['backgrounds/762884.jpg','backgrounds/762889.jpg'][Math.floor(Math.random()*2)])
 const page = ref('首頁'), section = ref('今日任務'), show = ref(''), user = ref(null), profile = ref(null), partner = ref(null)
 const tasks = ref([]), rewards = ref([{title:'指定一部電影之夜',points:35,emoji:'🎬'},{title:'早餐由我來準備',points:25,emoji:'🥞'},{title:'一個大大的擁抱',points:15,emoji:'🫂'}])
 const name = computed(()=>profile.value?.name || user.value?.displayName || '雲朵旅人')

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { auth, db } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth'
 import { addDoc, collection, doc, onSnapshot, runTransaction, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore'
@@ -21,12 +21,14 @@ const stops=[]
 let stopTasks=null, stopProfile=null, stopPartner=null, stopPair=null
 let refreshTimer=null
 function say(s){notice.value=s;setTimeout(()=>notice.value='',3500)}
+async function ensureDailyTasks(){const pairId=profile.value?.pairId;if(!pairId||!user.value)return;const cycle=todayCycle();for(const t of tasks.value){if(t.kind==='每日固定'&&t.rootId===t.id&&t.cycle!==cycle&&!tasks.value.some(x=>x.rootId===t.id&&x.cycle===cycle)){try{const instanceRef=doc(db,'pairs',pairId,'tasks',t.id+'-'+cycle);await setDoc(instanceRef,{title:t.title,note:t.note,kind:t.kind,due:null,cycle,rootId:t.id,rewardType:t.rewardType,points:t.points,status:'open',pairId,creatorId:t.creatorId,receiverId:t.receiverId,createdAt:serverTimestamp()})}catch{}}}}
 function stopLive(){[stopTasks,stopProfile,stopPartner,stopPair].forEach(fn=>fn?.());stopTasks=stopProfile=stopPartner=stopPair=null}
+watch(()=>{clock.value;return todayCycle()},()=>ensureDailyTasks())
 onMounted(()=>{refreshTimer=setInterval(()=>clock.value=Date.now(),30000);stops.push(onAuthStateChanged(auth,async u=>{stopLive();user.value=u;profile.value=null;partner.value=null;tasks.value=[];if(!u)return
   stopProfile=onSnapshot(doc(db,'users',u.uid),async snap=>{if(!snap.exists()){await setDoc(doc(db,'users',u.uid),{name:u.displayName||u.email,points:0,pairId:null,partnerId:null,createdAt:serverTimestamp()},{merge:true});return}
     profile.value={id:snap.id,...snap.data()}
     const pairId=profile.value.pairId
-    if(pairId){if(!stopTasks)stopTasks=onSnapshot(collection(db,'pairs',pairId,'tasks'),async s=>{tasks.value=s.docs.map(d=>({id:d.id,...d.data()}));for(const t of tasks.value){if(t.kind==='每日固定'&&t.rootId===t.id&&t.cycle!==todayCycle()&&!tasks.value.some(x=>x.rootId===t.id&&x.cycle===todayCycle())){try{const cycle=todayCycle(),instanceRef=doc(db,'pairs',pairId,'tasks',t.id+'-'+cycle);await setDoc(instanceRef,{title:t.title,note:t.note,kind:t.kind,due:null,cycle,rootId:t.id,rewardType:t.rewardType,points:t.points,status:'open',pairId,creatorId:t.creatorId,receiverId:t.receiverId,createdAt:serverTimestamp()})}catch{}}}})
+    if(pairId){if(!stopTasks)stopTasks=onSnapshot(collection(db,'pairs',pairId,'tasks'),s=>{tasks.value=s.docs.map(d=>({id:d.id,...d.data()}));ensureDailyTasks()})
       if(!stopPair)stopPair=onSnapshot(doc(db,'pairs',pairId),s=>{if(!s.exists())return;const p=s.data(),other=p.ownerId===u.uid?p.partnerId:p.ownerId;if(other&&!stopPartner)stopPartner=onSnapshot(doc(db,'users',other),q=>partner.value=q.exists()?{id:q.id,...q.data()}:null)})}
     else {stopTasks?.();stopPartner?.();stopTasks=stopPartner=null;tasks.value=[]}
   })

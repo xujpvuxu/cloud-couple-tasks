@@ -29,7 +29,9 @@ service cloud.firestore {
       allow create: if signedIn() &&
         request.resource.data.ownerId == request.auth.uid &&
         request.resource.data.partnerId == null;
-      allow read: if isPairMember(pairId);
+      allow read: if isPairMember(pairId) ||
+        (signedIn() && resource.data.partnerId == null &&
+         resource.data.expiresAt is timestamp && resource.data.expiresAt > request.time);
       allow update: if signedIn() &&
         resource.data.ownerId != request.auth.uid &&
         resource.data.partnerId == null &&
@@ -38,7 +40,8 @@ service cloud.firestore {
         request.resource.data.expiresAt == resource.data.expiresAt &&
         resource.data.expiresAt > request.time &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['partnerId']);
-      allow delete: if false;
+      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid &&
+        resource.data.partnerId == null;
 
       match /rewards/{rewardId} {
         function validReward(data) {

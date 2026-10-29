@@ -83,10 +83,28 @@ service cloud.firestore {
 
       match /settings/{settingId} {
         allow read: if isPairMember(pairId);
-        allow create: if isPairMember(pairId) && settingId == 'rewards' &&
-          request.resource.data.keys().hasOnly(['initialized', 'createdAt']) &&
-          request.resource.data.initialized == true;
-        allow update, delete: if false;
+        function validDate(value) {
+          return value is string && (value == '' || value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'));
+        }
+        function validCoupleDates(data) {
+          let pair = get(/databases/$(database)/documents/pairs/$(pairId)).data;
+          return data.keys().hasOnly(['togetherDate', 'birthdays', 'updatedBy', 'updatedAt']) &&
+            pair.partnerId is string &&
+            validDate(data.togetherDate) && data.birthdays is map &&
+            data.birthdays.keys().hasOnly([pair.ownerId, pair.partnerId]) &&
+            validDate(data.birthdays[pair.ownerId]) &&
+            validDate(data.birthdays[pair.partnerId]) &&
+            data.updatedBy == request.auth.uid && data.updatedAt is timestamp;
+        }
+        allow create: if isPairMember(pairId) && (
+          (settingId == 'rewards' &&
+            request.resource.data.keys().hasOnly(['initialized', 'createdAt']) &&
+            request.resource.data.initialized == true) ||
+          (settingId == 'dates' && validCoupleDates(request.resource.data))
+        );
+        allow update: if isPairMember(pairId) && settingId == 'dates' &&
+          validCoupleDates(request.resource.data);
+        allow delete: if false;
       }
 
       match /tasks/{taskId} {

@@ -137,6 +137,25 @@ service cloud.firestore {
           request.resource.data.receiverId == resource.data.receiverId &&
           (
             (resource.data.status == 'open' &&
+              request.resource.data.status == 'open' &&
+              request.auth.uid == resource.data.creatorId &&
+              request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(['title', 'note', 'due', 'rewardType', 'points']) &&
+              request.resource.data.title is string &&
+              request.resource.data.title.size() > 0 &&
+              request.resource.data.title.size() <= 80 &&
+              request.resource.data.note is string &&
+              request.resource.data.note.size() <= 200 &&
+              ((resource.data.kind == '限期任務' && request.resource.data.due is string) ||
+               (resource.data.kind != '限期任務' && request.resource.data.due == null)) &&
+              request.resource.data.rewardType in ['fixed', 'random'] &&
+              ((request.resource.data.rewardType == 'fixed' &&
+                request.resource.data.points is int &&
+                request.resource.data.points >= 0 &&
+                request.resource.data.points <= 999) ||
+               (request.resource.data.rewardType == 'random' &&
+                request.resource.data.points == null))) ||
+            (resource.data.status == 'open' &&
               request.resource.data.status == 'review' &&
               request.auth.uid == resource.data.receiverId &&
               ((resource.data.rewardType == 'random' &&

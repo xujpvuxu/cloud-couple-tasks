@@ -1,4 +1,5 @@
 ﻿# 背景圖片資料夾
 
-將網站背景圖片放在此資料夾，並以 `/backgrounds/檔名.webp` 的路徑引用。
-建議使用 WebP 格式，並確認手機版文字仍清楚易讀。
+背景素材放在這裡，網頁可用 `/backgrounds/檔名` 引用。
+目前提供 `cinnamoroll-cafe.png`（600×600）與 `cinnamoroll-birthday.png`（554×554）。
+對應原始 JPG 也保留在此資料夾。

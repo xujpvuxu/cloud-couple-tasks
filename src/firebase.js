@@ -1,7 +1,8 @@
 import {initializeApp} from 'firebase/app'
 import {getAuth} from 'firebase/auth'
 import {getFirestore} from 'firebase/firestore'
-const config={apiKey:import.meta.env.VITE_FIREBASE_API_KEY,authDomain:import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,projectId:import.meta.env.VITE_FIREBASE_PROJECT_ID,appId:import.meta.env.VITE_FIREBASE_APP_ID}
-export const ready=Object.values(config).every(Boolean)
-export const auth=ready?getAuth(initializeApp(config)):null
-export const db=ready?getFirestore():null
+// Firebase web configuration is public. Secure access with Auth and Firestore Rules.
+const config={apiKey:'AIzaSyAbL5waMshANI2F59sTApzOXp6u6a6hp1U',authDomain:'cloud-couple-tasks.firebaseapp.com',projectId:'cloud-couple-tasks',appId:'1:163525732492:web:a685a5f3cf3634578473a9'}
+export const ready=true
+export const auth=getAuth(initializeApp(config))
+export const db=getFirestore()

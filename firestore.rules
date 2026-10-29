@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function pairExists(pairId) {
+      return exists(/databases/$(database)/documents/pairs/$(pairId));
+    }
+    function isPairMember(pairId) {
+      return signedIn() && pairExists(pairId) &&
+        (get(/databases/$(database)/documents/pairs/$(pairId)).data.ownerId == request.auth.uid ||
+         get(/databases/$(database)/documents/pairs/$(pairId)).data.partnerId == request.auth.uid);
+    }
+
+    match /users/{uid} {
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow read: if signedIn() && (request.auth.uid == uid ||
+        (resource.data.pairId != null && isPairMember(resource.data.pairId)));
+      allow update, delete: if signedIn() && request.auth.uid == uid;
+    }
+
+    match /pairs/{pairId} {
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid &&
+        request.resource.data.partnerId == null;
+      allow read: if isPairMember(pairId);
+      allow update: if signedIn() &&
+        resource.data.ownerId != request.auth.uid &&
+        resource.data.partnerId == null &&
+        request.resource.data.partnerId == request.auth.uid &&
+        request.resource.data.ownerId == resource.data.ownerId &&
+        request.resource.data.expiresAt == resource.data.expiresAt &&
+        resource.data.expiresAt > request.time;
+      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+
+      match /tasks/{taskId} {
+        allow read: if isPairMember(pairId);
+        allow create: if isPairMember(pairId) &&
+          request.resource.data.pairId == pairId &&
+          request.resource.data.creatorId == request.auth.uid &&
+          request.resource.data.receiverId in [
+            get(/databases/$(database)/documents/pairs/$(pairId)).data.ownerId,
+            get(/databases/$(database)/documents/pairs/$(pairId)).data.partnerId
+          ] &&
+          request.resource.data.receiverId != request.auth.uid;
+        allow update: if isPairMember(pairId) &&
+          request.resource.data.pairId == resource.data.pairId &&
+          request.resource.data.creatorId == resource.data.creatorId &&
+          request.resource.data.receiverId == resource.data.receiverId;
+        allow delete: if isPairMember(pairId) && resource.data.creatorId == request.auth.uid;
+      }
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}

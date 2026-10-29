@@ -7,4 +7,9 @@
 .sidepup .side-pup-icon{display:block;width:72px;height:72px;object-fit:contain}
 .center-pup{width:145px;height:145px;display:grid;place-items:center;flex:none}
 .center-pup .center-pup-icon{display:block;width:125px;height:125px;object-fit:contain;filter:drop-shadow(0 7px 5px #9ab8c526)}
+.reward-bar{align-items:center}
+.reward-bar h2{margin:5px 0 0;color:#64778a;font-size:17px}
+.reward-actions{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.reward-actions button{margin:0!important;padding:7px 13px;border:1px solid #e1ebf0;border-radius:9px;background:#f5fafc;color:#6f94a9;font-size:10px}
+.reward-actions .reward-delete{border-color:#f0e2e2;background:#fdf7f7;color:#ad8585}
 .invite-code-box{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0;padding:10px 11px 10px 16px;border:1px solid #dceaf1;border-radius:12px;background:linear-gradient(120deg,#f2f9fc,#f8f5fa)}.invite-code-box strong{font:800 21px "Nunito",sans-serif;letter-spacing:4px;color:#668da7}.copy-invite{border:1px solid #d9e9f0;border-radius:9px;background:white;color:#7096ab;padding:8px 13px;font-size:10px;font-weight:800;box-shadow:0 2px 8px #769eb012}.copy-invite:hover{background:#edf6fa;border-color:#bfd9e5}

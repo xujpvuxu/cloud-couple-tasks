@@ -40,6 +40,28 @@ service cloud.firestore {
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['partnerId']);
       allow delete: if false;
 
+      match /rewards/{rewardId} {
+        function validReward(data) {
+          return data.keys().hasOnly(['title', 'points', 'emoji', 'createdAt', 'updatedAt']) &&
+            data.title is string && data.title.size() > 0 && data.title.size() <= 60 &&
+            data.points is int && data.points >= 0 && data.points <= 9999 &&
+            data.emoji is string && data.emoji.size() <= 8;
+        }
+        allow read: if isPairMember(pairId);
+        allow create: if isPairMember(pairId) && validReward(request.resource.data);
+        allow update: if isPairMember(pairId) && validReward(request.resource.data) &&
+          request.resource.data.createdAt == resource.data.createdAt;
+        allow delete: if isPairMember(pairId);
+      }
+
+      match /settings/{settingId} {
+        allow read: if isPairMember(pairId);
+        allow create: if isPairMember(pairId) && settingId == 'rewards' &&
+          request.resource.data.keys().hasOnly(['initialized', 'createdAt']) &&
+          request.resource.data.initialized == true;
+        allow update, delete: if false;
+      }
+
       match /tasks/{taskId} {
         allow read: if isPairMember(pairId);
         allow create: if isPairMember(pairId) &&

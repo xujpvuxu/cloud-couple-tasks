@@ -8,10 +8,11 @@ const tabs = [['☁️','首頁'],['🐶','任務'],['⭐','集點卡'],['🪽',
 const page = ref('首頁'), section = ref('今日任務'), show = ref(''), user = ref(null), profile = ref(null), partner = ref(null)
 const tasks = ref([]), rewards = ref([{title:'指定一部電影之夜',points:35,emoji:'🎬'},{title:'早餐由我來準備',points:25,emoji:'🥞'},{title:'一個大大的擁抱',points:15,emoji:'🫂'}])
 const name = computed(()=>profile.value?.name || user.value?.displayName || '雲朵旅人')
-const points = computed(()=>Number(profile.value?.points || 0)), partnerPoints = computed(()=>Number(partner.value?.points || 0))
+const points = computed(()=>tasks.value.filter(t=>t.status==='done'&&t.receiverId===user.value?.uid).reduce((n,t)=>n+Number(t.roll??t.points??0),0))
+const partnerPoints = computed(()=>tasks.value.filter(t=>t.status==='done'&&t.receiverId===partner.value?.id).reduce((n,t)=>n+Number(t.roll??t.points??0),0))
 const title = computed(()=>page.value==='任務'?'任務小天地':page.value==='集點卡'?'我們的集點卡':page.value==='紀錄'?'一路走來的紀錄':page.value==='兌換'?'喜歡的兌換所':'今天也一起加油。')
 const shown = computed(()=>section.value==='今日任務'?tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid):section.value==='驗收任務'?tasks.value.filter(t=>t.status==='review'&&t.creatorId===user.value?.uid):tasks.value.filter(t=>t.creatorId===user.value?.uid))
-const form=ref({email:'',password:'',nickname:''}), authMode=ref('login'), error=ref(''), draft=ref(''), invite=ref(''), notice=ref('')
+const form=ref({email:'',password:'',nickname:''}), authMode=ref('login'), error=ref(''), draft=ref(''), invite=ref(''), rejectReason=ref(''), notice=ref('')
 const stops=[]
 let stopTasks=null, stopProfile=null, stopPartner=null, stopPair=null
 function say(s){notice.value=s;setTimeout(()=>notice.value='',3500)}
@@ -34,7 +35,7 @@ async function complete(t){try{if(t.status==='rejected'){await updateDoc(doc(db,
   const roll=t.rewardType==='random'?Math.floor(Math.random()*11):Number(t.points||5)
   await updateDoc(doc(db,'pairs',profile.value.pairId,'tasks',t.id),{status:'review',roll,completedAt:serverTimestamp()});t.roll=roll;show.value='dice';setTimeout(()=>show.value='',1800)
 }catch(e){say('更新失敗：'+e.message)}}
-async function review(t,ok){try{if(ok){const n=Number(t.roll??t.points??0);await runTransaction(db,async tx=>{const taskRef=doc(db,'pairs',profile.value.pairId,'tasks',t.id),receiverRef=doc(db,'users',t.receiverId),rs=await tx.get(receiverRef);tx.update(taskRef,{status:'done',reviewedAt:serverTimestamp()});tx.update(receiverRef,{points:Number(rs.data()?.points||0)+n})});say('已驗收並送出 '+(t.roll??t.points)+' 點。')}else{await updateDoc(doc(db,'pairs',profile.value.pairId,'tasks',t.id),{status:'rejected',rejectReason:'請再確認這個任務。'});say('任務已退回。')}show.value=''}catch(e){say('驗收失敗：'+e.message)}}
+async function review(t,ok){try{if(ok){await updateDoc(doc(db,'pairs',profile.value.pairId,'tasks',t.id),{status:'done',reviewedAt:serverTimestamp()});say('已驗收並送出 '+(t.roll??t.points)+' 點。')}else{if(!rejectReason.value.trim())return say('請先填寫駁回原因。');await updateDoc(doc(db,'pairs',profile.value.pairId,'tasks',t.id),{status:'rejected',rejectReason:rejectReason.value.trim(),rejectedAt:serverTimestamp()});rejectReason.value='';say('任務已退回。')}show.value=''}catch(e){say('驗收失敗：'+e.message)}}
 </script>
 
 <template>
@@ -51,7 +52,7 @@ async function review(t,ok){try{if(ok){const n=Number(t.roll??t.points??0);await
 <template v-if="show==='login'"><form @submit.prevent="authSubmit"><input v-if="authMode==='signup'" v-model="form.nickname" placeholder="暱稱" required><input v-model="form.email" type="email" placeholder="Email" autocomplete="email" required><input v-model="form.password" type="password" placeholder="密碼（至少 6 個字元）" minlength="6" required><p v-if="error" class="auth-error">{{error}}</p><button class="primary wide" :disabled="authBusy">{{authBusy?'請稍候…':authMode==='signup'?'建立帳號':'登入'}}</button></form><button class="auth-switch" @click="authMode=authMode==='login'?'signup':'login'">{{authMode==='login'?'還沒有帳號？註冊':'已有帳號？返回登入'}}</button></template>
 <template v-else-if="show==='pair'"><p>邀請碼有效 7 天，配對後立即失效。</p><button v-if="user&&!profile?.pairId" class="primary wide" @click="makeInvite">建立邀請碼</button><input v-if="user&&!profile?.pairId" v-model="invite" placeholder="輸入另一半的邀請碼"><button v-if="user&&!profile?.pairId" class="primary wide" @click="joinPair">使用邀請碼配對</button><p v-if="!user">請先登入。</p><p v-if="profile?.pairId">你們已經配對成功 ☁️</p></template>
 <template v-else-if="show==='publish'"><input v-model="draft" placeholder="任務名稱，例如：幫我買草莓牛奶"><button class="primary wide" @click="publish">發布給另一半</button></template>
-<template v-else-if="show==='review'"><p>任務「{{tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid)?.title}}」已完成。確認後點數會送給對方。</p><button class="primary wide" @click="tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid)&&review(tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid),true)">✓ 驗收並送出點數</button><button class="auth-switch" @click="tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid)&&review(tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid),false)">駁回並退回任務</button></template>
+<template v-else-if="show==='review'"><p>任務「{{tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid)?.title}}」已完成。確認後點數會送給對方。</p><button class="primary wide" @click="tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid)&&review(tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid),true)">✓ 驗收並送出點數</button><textarea v-model="rejectReason" placeholder="駁回原因（對方會看到）"></textarea><button class="auth-switch" @click="tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid)&&review(tasks.find(t=>t.status==='review'&&t.creatorId===user?.uid),false)">駁回並退回任務</button></template>
 <template v-else><div class="die">🎲 <b>{{tasks.find(t=>t.status==='review'&&t.receiverId===user?.uid)?.roll??'✦'}}</b> pt</div><p>已送出驗收，等待發布者確認。</p></template></section></div>
 </div>
 </template>

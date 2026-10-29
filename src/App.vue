@@ -4,7 +4,7 @@ import { auth, db } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth'
 import { addDoc, collection, doc, onSnapshot, runTransaction, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore'
 
-const iconFiles = ['1280.webp',...Array.from({length:22},(_,i)=>`1280 (${i+1}).webp`),'762883.jpg']
+const iconFiles = [...Array.from({length:23},(_,i)=>String(i+1).padStart(2,'0')+'.webp'),'24.jpg']
 const pickedIcons = [...iconFiles].sort(()=>Math.random()-.5).slice(0,5).map(file=>'/icons/'+encodeURIComponent(file))
 const randomSideIcon = '/icons/'+encodeURIComponent(iconFiles[Math.floor(Math.random()*iconFiles.length)])
 const tabs = ['首頁','任務','集點卡','紀錄','兌換'].map((label,i)=>[pickedIcons[i],label])

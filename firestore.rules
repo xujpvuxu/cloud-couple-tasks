@@ -44,13 +44,23 @@ service cloud.firestore {
         allow read: if isPairMember(pairId);
         allow create: if isPairMember(pairId) &&
           request.resource.data.pairId == pairId &&
-          request.resource.data.creatorId == request.auth.uid &&
-          request.resource.data.receiverId != request.auth.uid &&
-          request.resource.data.receiverId in [
-            get(/databases/$(database)/documents/pairs/$(pairId)).data.ownerId,
-            get(/databases/$(database)/documents/pairs/$(pairId)).data.partnerId
-          ] &&
-          request.resource.data.status == 'open';
+          request.resource.data.status == 'open' &&
+          (
+            (request.resource.data.creatorId == request.auth.uid &&
+              request.resource.data.receiverId != request.auth.uid &&
+              request.resource.data.receiverId in [
+                get(/databases/$(database)/documents/pairs/$(pairId)).data.ownerId,
+                get(/databases/$(database)/documents/pairs/$(pairId)).data.partnerId
+              ]) ||
+            (request.resource.data.kind == '每日固定' &&
+              request.resource.data.receiverId == request.auth.uid &&
+              request.resource.data.rootId is string &&
+              request.resource.data.cycle is string &&
+              exists(/databases/$(database)/documents/pairs/$(pairId)/tasks/$(request.resource.data.rootId)) &&
+              get(/databases/$(database)/documents/pairs/$(pairId)/tasks/$(request.resource.data.rootId)).data.rootId == request.resource.data.rootId &&
+              get(/databases/$(database)/documents/pairs/$(pairId)/tasks/$(request.resource.data.rootId)).data.creatorId == request.resource.data.creatorId &&
+              get(/databases/$(database)/documents/pairs/$(pairId)/tasks/$(request.resource.data.rootId)).data.receiverId == request.auth.uid)
+          );
         allow update: if isPairMember(pairId) &&
           request.resource.data.pairId == resource.data.pairId &&
           request.resource.data.creatorId == resource.data.creatorId &&

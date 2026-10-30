@@ -24,7 +24,7 @@
 - `npm run dev`：啟動 Vite 開發伺服器。
 - `npm run build`：建立部署用的 `dist/` 靜態網站。
 
-推送到 `main` 會觸發 GitHub Actions；工作流程使用 `npm ci`，請一併提交套件變更後產生的 `package-lock.json`。
+推送到 `main` 會觸發 GitHub Actions；工作流程使用 `npm ci`，請一併提交套件變更後產生的 `package-lock.json`。Pages 部署 API 遇到暫時錯誤時會每隔 15 秒重試，最多三次。
 
 ## 程式風格
 

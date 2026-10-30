@@ -6,6 +6,8 @@
 
 ## Firebase 設定
 
+完成下列 Storage bucket 設定後，可在專案根目錄執行 `npx firebase-tools deploy --only firestore:rules,storage` 發布兩種規則。
+
 1. 在 Firebase Console 的 Storage 頁面建立或選擇這個 Firebase 專案的 bucket，並將其名稱設為 `src/firebase.js` 的 `storageBucket`。新建的預設 bucket 通常是 `cloud-couple-tasks.firebasestorage.app`；較早建立的 bucket 可能是 `cloud-couple-tasks.appspot.com`。
 2. 將 `storage.rules` 發布到 Firebase Storage，並將更新後的 `firestore.rules` 發布到 Firestore。
 3. Firebase Storage 新建 bucket 需要 Blaze 計費方案。建立前請在 Firebase Console 確認專案方案與 bucket 可用狀態。

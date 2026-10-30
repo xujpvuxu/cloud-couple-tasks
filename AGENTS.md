@@ -9,6 +9,8 @@
 - `public/backgrounds/README.md`：背景素材與使用方式；目前固定使用 `public/backgrounds/762886.jpg`。
 - public/icons/homepage-cinnamoroll.jpg 與 public/icons/side-cinnamoroll.png：固定用於首頁中央與日期下方角色圖；導覽列圖示仍隨機挑選。
 - `firestore.rules`：Firestore 存取規則；修改資料模型時同步檢查權限。
+- `storage.rules`：Firebase Storage 存取規則；電影票根相片限配對成員讀取及上傳者刪除。
+- `firebase.json`、`.firebaserc`：Firebase CLI 規則部署設定及預設專案 `cloud-couple-tasks`。
 - `storage.rules`：Firebase Storage 存取規則；票根照片僅限配對成員讀取、上傳者刪除。
 - `docs/movie-ticket-album.md`：電影票根相簿資料結構、圖片處理及 Firebase Storage 設定說明。
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
@@ -43,6 +45,7 @@ Vue 單檔元件使用 `<script setup>`、Composition API 與 JavaScript ES modu
 ## Firebase 與安全
 
 Firebase 網頁設定不是服務帳戶私鑰；不得提交密碼、服務帳戶金鑰或其他伺服器憑證。任何 Firestore 或 Storage 資料模型、寫入流程變更，都要同步檢查 `firestore.rules` 和 `storage.rules`，避免讓使用者自行修改點數或讀取未配對者資料。
+以 `npx firebase-tools deploy --only firestore:rules,storage` 部署規則。首次部署 Storage 規則前，需先在 Firebase Console 為專案啟用 Storage 並建立 bucket。
 
 ## 任務、點數與紀錄規則
 

@@ -5,6 +5,7 @@
 - `src/App.vue`：Vue 單頁介面與登入、配對及任務流程。
 - `src/firebase.js`：Firebase Authentication 與 Firestore 初始化。
 - `src/main.js`、`src/style.css`：應用程式入口、Bootstrap 與自訂樣式。
+- `public/images/cloud-cat.png`：透明背景貓咪吉祥物；介面使用貓咪圖像並採用貓咪、小窩文案。
 - `firestore.rules`：Firestore 存取規則；修改資料模型時同步檢查權限。
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
 - `.github/workflows/cleanup-records.yml`、`scripts/cleanup-records.mjs`：每日清理已結束超過七天的任務及兌換紀錄。

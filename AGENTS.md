@@ -9,10 +9,6 @@
 - `public/backgrounds/README.md`：背景素材與使用方式；目前固定使用 `public/backgrounds/762886.jpg`。
 - public/icons/homepage-cinnamoroll.jpg 與 public/icons/side-cinnamoroll.png：固定用於首頁中央與日期下方角色圖；導覽列圖示仍隨機挑選。
 - `firestore.rules`：Firestore 存取規則；修改資料模型時同步檢查權限。
-- `storage.rules`：Firebase Storage 存取規則；電影票根相片限配對成員讀取及上傳者刪除。
-- `firebase.json`、`.firebaserc`：Firebase CLI 規則部署設定及預設專案 `cloud-couple-tasks`。
-- `storage.rules`：Firebase Storage 存取規則；票根照片僅限配對成員讀取、上傳者刪除。
-- `docs/movie-ticket-album.md`：電影票根相簿資料結構、圖片處理及 Firebase Storage 設定說明。
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
 - `.github/workflows/cleanup-records.yml`、`scripts/cleanup-records.mjs`：每日清理已結束超過七天的任務及兌換紀錄。
 - `docs/data-retention.md`：七天紀錄保留與清理設定說明。
@@ -44,8 +40,7 @@ Vue 單檔元件使用 `<script setup>`、Composition API 與 JavaScript ES modu
 
 ## Firebase 與安全
 
-Firebase 網頁設定不是服務帳戶私鑰；不得提交密碼、服務帳戶金鑰或其他伺服器憑證。任何 Firestore 或 Storage 資料模型、寫入流程變更，都要同步檢查 `firestore.rules` 和 `storage.rules`，避免讓使用者自行修改點數或讀取未配對者資料。
-以 `npx firebase-tools deploy --only firestore:rules,storage` 部署規則。首次部署 Storage 規則前，需先在 Firebase Console 為專案啟用 Storage 並建立 bucket。
+Firebase 網頁設定不是服務帳戶私鑰；不得提交密碼、服務帳戶金鑰或其他伺服器憑證。任何 Firestore 資料模型或寫入流程變更，都要同步檢查 `firestore.rules`，避免讓使用者自行修改點數或讀取未配對者資料。
 
 ## 任務、點數與紀錄規則
 
@@ -62,8 +57,6 @@ Firebase 網頁設定不是服務帳戶私鑰；不得提交密碼、服務帳�
 - 兌換區的可用點數應以醒目的大字呈現，待確認保留點數與扣點時機顯示在次要說明。
 - 同一獎品可重複兌換；即使該獎品已有待確認申請，只要可用點數足夠仍可再次送出，並分別等待對方確認及保留點數。
 - 獎品區將持有狀態相同且名稱相同的獎品合併顯示數量；申請使用一次只處理一份。
-- 左側導覽列的「兌換」下方有獨立「票根」頁面，提供兩人共用的電影票根相簿。每筆代表一場電影，含日期、最多四張照片、選填片名與備註；日期由新到舊。上傳者可修改日期與文字或刪除整筆及照片，另一半唯讀。票根保留至上傳者刪除，不納入七天清理；圖片使用 Firebase Storage，票根中只存 Storage 路徑。
-- 票根照片接受 JPG、PNG、WebP、HEIC、HEIF；上傳前轉為不超過 5 MB 的 JPEG。修改票根功能時需同步檢查 `firestore.rules` 與 `storage.rules`，並確認 Firebase Storage bucket 已建立及 rules 已發布。
 - 關於本專案的任何結論，完成討論後都要更新本檔；若有相關功能文件，也要一併更新，避免結論只留在對話中。結論改變時，應同步更新程式、Firestore 規則、清理流程及相關文件。
 
 <!-- aoci:begin -->

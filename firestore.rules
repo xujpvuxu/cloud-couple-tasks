@@ -126,33 +126,6 @@ service cloud.firestore {
         allow delete: if false;
       }
 
-      match /tickets/{ticketId} {
-        function validTicket(data) {
-          return data.keys().hasOnly(['pairId', 'ownerUid', 'date', 'title', 'note', 'photoPaths', 'createdAt', 'updatedAt']) &&
-            data.pairId == pairId && data.ownerUid is string &&
-            data.date is string && data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$') &&
-            data.title is string && data.title.size() <= 80 &&
-            data.note is string && data.note.size() <= 300 &&
-            data.photoPaths is list && data.photoPaths.size() >= 1 && data.photoPaths.size() <= 4 &&
-            data.createdAt is timestamp && data.updatedAt is timestamp;
-        }
-        allow read: if isPairMember(pairId);
-        allow create: if isPairMember(pairId) &&
-          request.resource.data.ownerUid == request.auth.uid &&
-          request.resource.data.createdAt == request.time &&
-          request.resource.data.updatedAt == request.time &&
-          validTicket(request.resource.data);
-        allow update: if isPairMember(pairId) &&
-          resource.data.ownerUid == request.auth.uid &&
-          request.resource.data.ownerUid == resource.data.ownerUid &&
-          request.resource.data.pairId == resource.data.pairId &&
-          request.resource.data.photoPaths == resource.data.photoPaths &&
-          request.resource.data.createdAt == resource.data.createdAt &&
-          request.resource.data.updatedAt == request.time &&
-          validTicket(request.resource.data);
-        allow delete: if isPairMember(pairId) && resource.data.ownerUid == request.auth.uid;
-      }
-
       match /settings/{settingId} {
         allow read: if isPairMember(pairId);
         function validDate(value) {

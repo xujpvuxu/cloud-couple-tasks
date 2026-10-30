@@ -33,6 +33,8 @@ Vue 單檔元件使用 `<script setup>`、Composition API 與 JavaScript ES modu
 
 提交訊息使用簡短、明確的動詞開頭，例如 `Connect Firebase authentication` 或 `修正任務驗收流程`。Pull Request 請說明使用者可見的變更、列出驗證結果；介面調整附上桌面與手機截圖。涉及 Firestore 時，描述資料結構和安全規則的變更。
 
+使用者要求修改專案時，完成修改與必要驗證後，應提交並推送到目前工作分支。若使用者指定只修改本機、不要提交或不要推送，則依其指定辦理。
+
 ## Firebase 與安全
 
 Firebase 網頁設定不是服務帳戶私鑰；不得提交密碼、服務帳戶金鑰或其他伺服器憑證。任何 Firestore 資料模型或寫入流程變更，都要同步檢查 `firestore.rules`，避免讓使用者自行修改點數或讀取未配對者資料。

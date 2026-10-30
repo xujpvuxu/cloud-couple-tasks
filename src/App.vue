@@ -12,7 +12,7 @@ const randomSideIcon = assetUrl('icons/'+encodeURIComponent(iconFiles[Math.floor
 const randomCenterIcon = assetUrl('icons/'+encodeURIComponent(iconFiles[Math.floor(Math.random()*iconFiles.length)]))
 const holidaySeeds = [{month:1,day:1,name:'元旦',emoji:'🎆',about:'迎接新的一年。'},{month:2,day:14,name:'情人節',emoji:'💝',about:'用小小心意表達愛意。'},{month:3,day:14,name:'白色情人節',emoji:'🍬',about:'在情人節之後回應心意的日子。'},{month:5,day:20,name:'520 我愛你日',emoji:'💕',about:'以「520」諧音傳達我愛你。'},{month:12,day:24,name:'平安夜',emoji:'🕯️',about:'聖誕節前夕，常與親友相聚。'},{month:12,day:25,name:'聖誕節',emoji:'🎄',about:'世界各地分享祝福與節慶氣氛的日子。'},{month:12,day:31,name:'跨年夜',emoji:'🎇',about:'一起倒數，迎接新年。'}]
 const tabs = ['首頁','任務','獎品','兌換','紀錄','設定'].map((label,i)=>[pickedIcons[i],label])
-const backgroundImage = assetUrl(['backgrounds/762884.jpg','backgrounds/762889.jpg'][Math.floor(Math.random()*2)])
+const backgroundImage = assetUrl(['backgrounds/762884.jpg','backgrounds/cinnamoroll-cafe.png'][Math.floor(Math.random()*2)])
 const page = ref('首頁'), section = ref('今日任務'), prizeSection = ref('獎品'), show = ref(''), user = ref(null), profile = ref(null), partner = ref(null)
 const coupleDates = ref({togetherDate:'',myBirthday:'',partnerBirthday:''})
 const savedCoupleDateData = ref({}), otherUserId = ref('')

@@ -31,6 +31,7 @@
 .mobile-nav button{position:relative}.mobile-nav .attention-dot{position:absolute;top:2px;right:12px;margin:0}
 .pending-redeem{color:#bc8750!important}.pending-use{color:#8670b8!important}
 .prize-quantity{display:inline-block;margin-left:5px;padding:2px 7px;border-radius:999px;background:#edf5f8;color:#6f96ab;font-size:10px}
+.redemption-error{flex-basis:100%;color:#b85460!important;text-align:left;font-size:10px}
 .reward-actions .redeem-button{border-color:#d9eaf2;background:#edf7fb;color:#5f92ad}
 .reward-actions .redeem-button:disabled{border-color:#edf0f2;background:#f6f7f8;color:#aab4bc;cursor:not-allowed}
 @media(max-width:700px){.center-pup{width:145px;height:155px}.center-pup .center-pup-icon{width:140px;height:140px}.sidepup .side-pup-icon{width:112px;height:112px}.redemption-item{gap:6px}.redemption-item button{padding:7px}}

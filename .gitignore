@@ -3,3 +3,7 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Local AOCI runtime and machine-specific Codex MCP configuration
+.aoci/
+.codex/

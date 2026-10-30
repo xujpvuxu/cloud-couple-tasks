@@ -14,14 +14,39 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
+      function validTaskPointAward() {
+        let pairId = resource.data.pairId;
+        let taskId = request.resource.data.pointsEventTaskId;
+        let taskPath = /databases/$(database)/documents/pairs/$(pairId)/tasks/$(taskId);
+        let before = get(taskPath).data;
+        let after = getAfter(taskPath).data;
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pointsBalance', 'pointsEventTaskId']) &&
+          taskId is string && before.status == 'review' && after.status == 'done' &&
+          after.pointsCredited == true && before.creatorId == request.auth.uid &&
+          before.receiverId == uid && after.receiverId == uid && after.roll is int &&
+          request.resource.data.pointsBalance == resource.data.get('pointsBalance', 0) + after.roll;
+      }
+      function validRedemptionPointDebit() {
+        let pairId = resource.data.pairId;
+        let redemptionId = request.resource.data.pointsEventRedemptionId;
+        let redemptionPath = /databases/$(database)/documents/pairs/$(pairId)/redemptions/$(redemptionId);
+        let before = get(redemptionPath).data;
+        let after = getAfter(redemptionPath).data;
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pointsBalance', 'pointsEventRedemptionId']) &&
+          redemptionId is string && before.status == 'pending' && after.status == 'approved' &&
+          after.pointsDebited == true && before.requesterId == uid && before.approverId == request.auth.uid &&
+          request.resource.data.pointsBalance == resource.data.get('pointsBalance', 0) - before.points;
+      }
       allow create: if signedIn() && request.auth.uid == uid &&
-        request.resource.data.points == 0;
+        request.resource.data.points == 0 && request.resource.data.pointsBalance == 0;
       allow read: if signedIn() && (request.auth.uid == uid ||
         (resource.data.pairId != null && isPairMember(resource.data.pairId)));
-      allow update: if signedIn() && request.auth.uid == uid &&
-        request.resource.data.points == resource.data.points &&
-        request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['name', 'pairId', 'partnerId']);
+      allow update: if signedIn() && (
+        (request.auth.uid == uid && request.resource.data.points == resource.data.points &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'pairId', 'partnerId'])) ||
+        (validTaskPointAward() && request.resource.data.points == resource.data.points) ||
+        (validRedemptionPointDebit() && request.resource.data.points == resource.data.points)
+      );
       allow delete: if false;
     }
 
@@ -76,11 +101,28 @@ service cloud.firestore {
         }
         allow read: if isPairMember(pairId);
         allow create: if isPairMember(pairId) && validRedemption(request.resource.data);
-        allow update: if isPairMember(pairId) &&
-          resource.data.status == 'pending' &&
-          request.auth.uid == resource.data.approverId &&
-          request.resource.data.status in ['approved', 'rejected'] &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'reviewedAt']);
+        allow update: if isPairMember(pairId) && (
+          (resource.data.status == 'pending' &&
+            request.auth.uid == resource.data.approverId &&
+            request.resource.data.status in ['approved', 'rejected'] &&
+            request.resource.data.reviewedAt == request.time &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'reviewedAt', 'pointsDebited']) &&
+            ((request.resource.data.status == 'approved' && request.resource.data.pointsDebited == true) ||
+             (request.resource.data.status == 'rejected' && !('pointsDebited' in request.resource.data)))) ||
+          (resource.data.status == 'approved' && resource.data.pointsDebited == true &&
+            request.auth.uid == resource.data.requesterId &&
+            request.resource.data.status == 'use_pending' &&
+            request.resource.data.useRequestedAt == request.time &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'useRequestedAt'])) ||
+          (resource.data.status == 'use_pending' &&
+            request.auth.uid == resource.data.approverId &&
+            ((request.resource.data.status == 'used' &&
+              request.resource.data.usedAt == request.time &&
+              request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'usedAt'])) ||
+             (request.resource.data.status == 'approved' &&
+              request.resource.data.useRejectedAt == request.time &&
+              request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'useRejectedAt']))))
+        );
         allow delete: if false;
       }
 
@@ -174,8 +216,9 @@ service cloud.firestore {
             (resource.data.status == 'review' &&
               request.resource.data.status == 'done' &&
               request.auth.uid == resource.data.creatorId &&
+              request.resource.data.pointsCredited == true &&
               request.resource.data.diff(resource.data).affectedKeys()
-                .hasOnly(['status', 'reviewedAt'])) ||
+                .hasOnly(['status', 'reviewedAt', 'pointsCredited'])) ||
             (resource.data.status == 'review' &&
               request.resource.data.status == 'rejected' &&
               request.auth.uid == resource.data.creatorId &&

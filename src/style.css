@@ -25,6 +25,9 @@
 .redemption-info small{margin-top:4px;color:#9baab7;font-size:9px}
 .redemption-item button{padding:7px 10px;border:1px solid #deebf1;border-radius:8px;background:#f3f9fb;color:#6f94a9;font-size:9px}
 .redemption-item .redeem-reject{border-color:#f0e3e3;background:#fcf7f7;color:#ad8585}
+.attention-dot{display:inline-block;width:8px;height:8px;flex:none;border-radius:50%;background:#e85362;box-shadow:0 0 0 2px #ffe8eb;margin-left:5px;vertical-align:middle}
+.mobile-nav button{position:relative}.mobile-nav .attention-dot{position:absolute;top:2px;right:12px;margin:0}
+.pending-redeem{color:#bc8750!important}.pending-use{color:#8670b8!important}
 .reward-actions .redeem-button{border-color:#d9eaf2;background:#edf7fb;color:#5f92ad}
 .reward-actions .redeem-button:disabled{border-color:#edf0f2;background:#f6f7f8;color:#aab4bc;cursor:not-allowed}
 @media(max-width:700px){.center-pup{width:145px;height:155px}.center-pup .center-pup-icon{width:140px;height:140px}.sidepup .side-pup-icon{width:112px;height:112px}.redemption-item{gap:6px}.redemption-item button{padding:7px}}

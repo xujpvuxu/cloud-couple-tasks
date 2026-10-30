@@ -70,6 +70,7 @@ header .mobile-invite{display:none}
 .date-save-message.error{border-color:#f0dddd;background:#fff8f8;color:#a57676}
 @media(max-width:700px){.mobile-nav.paired{grid-template-columns:repeat(6,1fr)}}
 .nickname-settings{margin:12px 0;padding:20px 22px;border:1px solid #e8eff3;border-radius:15px;background:linear-gradient(130deg,#f7fbfd,#fcf8fa)}
+.settings-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.settings-heading h2{margin:0 0 5px;color:#64788b;font-size:15px}.settings-heading p{margin:0;color:#899aa8;font-size:10px;line-height:1.6}.settings-toggle{flex:none;border:1px solid #dbe9f0;border-radius:9px;background:#fff;color:#6d94a9;padding:9px 12px;font-size:10px}
 .nickname-settings h2{margin:0 0 6px;color:#64788b;font-size:15px}
 .nickname-settings>p,.nickname-form label{color:#899aa8;font-size:10px;line-height:1.6}
 .nickname-settings>p{margin:0 0 12px}
@@ -80,6 +81,7 @@ header .mobile-invite{display:none}
 .nickname-message{margin:10px 0;padding:10px 12px;border:1px solid #dbece5;border-radius:9px;background:#f4fbf7;color:#648d78;font-size:10px;line-height:1.5}
 .nickname-message.error{border-color:#f0dddd;background:#fff8f8;color:#a57676}
 @media(max-width:700px){.nickname-settings{padding:17px 14px}}
+@media(max-width:700px){.settings-heading{align-items:flex-start}.settings-toggle{padding:8px;font-size:9px}}
 .task-actions{display:flex;gap:7px;margin-top:8px}
 .task-actions button{padding:6px 10px;border:1px solid #dfebf1;border-radius:8px;background:#f5fafc;color:#6e94aa;font-size:9px}
 .task-actions .task-delete{border-color:#f0e2e2;background:#fdf7f7;color:#ad8585}

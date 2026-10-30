@@ -7,6 +7,7 @@
 - `src/main.js`、`src/style.css`：應用程式入口、Bootstrap 與自訂樣式。
 - `public/images/cloud-cat.png`：透明背景角色吉祥物；介面使用此圖像並採用角色、小窩文案。
 - `public/backgrounds/README.md`：背景素材與使用方式；目前固定使用 `public/backgrounds/762886.jpg`。
+- public/icons/homepage-cinnamoroll.jpg 與 public/icons/side-cinnamoroll.png：固定用於首頁中央與日期下方角色圖；導覽列圖示仍隨機挑選。
 - `firestore.rules`：Firestore 存取規則；修改資料模型時同步檢查權限。
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
 - `.github/workflows/cleanup-records.yml`、`scripts/cleanup-records.mjs`：每日清理已結束超過七天的任務及兌換紀錄。

@@ -89,8 +89,10 @@ const importantDates = computed(()=>{clock.value;const personal=[];if(coupleDate
 const expired = t => t.kind==='每日固定' ? t.cycle!==todayCycle() : t.kind==='限期任務' && t.due && todayDate()>t.due
 const publishedTaskState = task => task.kind==='每日固定'&&task.rootId===task.id?(tasks.value.find(instance=>instance.rootId===task.id&&instance.cycle===todayCycle())?.status||'open'):task.status
 const publishedTaskStatusLabel = task => {const status=publishedTaskState(task);return status==='review'?'對方已完成・待我驗收':status==='done'?'已驗收完成':status==='rejected'?'已駁回・等待對方重做':'等待對方完成'}
-const yesterdayTasks=computed(()=>{clock.value;return tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid&&(t.kind==='每日固定'?String(t.cycle||'').startsWith(yesterdayDate()):taiwanDay(t.createdAt)===yesterdayDate()))})
-const shown = computed(()=>{clock.value;return section.value==='我的任務'?tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid&&!expired(t)):section.value==='驗收任務'?tasks.value.filter(t=>t.status==='review'&&t.creatorId===user.value?.uid):tasks.value.filter(t=>t.creatorId===user.value?.uid&&(t.kind==='每日固定'?t.rootId===t.id:!expired(t)))})
+const taskScheduleDate = task => task.kind==='每日固定'?String(task.cycle||'').slice(0,10):task.kind==='限期任務'&&task.due?task.due:taiwanDay(task.createdAt)
+const yesterdayTasks=computed(()=>{clock.value;return tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid&&taskScheduleDate(t)===yesterdayDate())})
+const yesterdayTaskIds = computed(()=>new Set(yesterdayTasks.value.map(task=>task.id)))
+const shown = computed(()=>{clock.value;return section.value==='我的任務'?tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid&&!expired(t)&&!yesterdayTaskIds.value.has(t.id)):section.value==='驗收任務'?tasks.value.filter(t=>t.status==='review'&&t.creatorId===user.value?.uid):tasks.value.filter(t=>t.creatorId===user.value?.uid&&(t.kind==='每日固定'?t.rootId===t.id:!expired(t)))})
 const myTaskCount = computed(()=>{clock.value;return tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid&&!expired(t)).length})
 const myPublishedTaskCount = computed(()=>{clock.value;return tasks.value.filter(t=>t.creatorId===user.value?.uid&&(t.kind==='每日固定'?t.rootId===t.id:!expired(t))).length})
 const reviewTaskCount = computed(()=>tasks.value.filter(t=>t.status==='review'&&t.creatorId===user.value?.uid).length)

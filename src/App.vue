@@ -72,7 +72,7 @@ const myPublishedTaskCount = computed(()=>{clock.value;return tasks.value.filter
 const reviewTaskCount = computed(()=>tasks.value.filter(t=>t.status==='review'&&t.creatorId===user.value?.uid).length)
 const form=ref({email:'',password:'',nickname:''}), authMode=ref('login'), error=ref(''), taskForm=ref({title:'',note:'',kind:'臨時發布',due:'',rewardType:'fixed',points:5}), invite=ref(''), activeInviteCode=ref(''), rejectReason=ref(''), notice=ref('')
 const dateSaveMessage=ref(''), dateSaving=ref(false), dateSaveError=ref(false)
-const showHolidaySettings=ref(true), holidayFormOpen=ref(false), holidaySaving=ref(false), holidayMessage=ref(''), holidayMessageError=ref(false), holidayEditorId=ref(''), holidayForm=ref({name:'',calendar:'solar',month:'',day:''}), holidayDeleteId=ref(''), restoreHolidaysPrompt=ref(false)
+const showHolidaySettings=ref(false), holidayFormOpen=ref(false), holidaySaving=ref(false), holidayMessage=ref(''), holidayMessageError=ref(false), holidayEditorId=ref(''), holidayForm=ref({name:'',calendar:'solar',month:'',day:''}), holidayDeleteId=ref(''), restoreHolidaysPrompt=ref(false)
 const nicknameDraft=ref(''), nicknameDirty=ref(false), nicknameMessage=ref(''), nicknameSaving=ref(false), nicknameError=ref(false)
 const showNicknameEditor=ref(false), showDateEditor=ref(false)
 const rewardForm=ref({title:'',points:10,emoji:'🎁'}), editingRewardId=ref('')

@@ -176,6 +176,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .holiday-select{display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
 .holiday-select input{width:18px;height:18px;margin:0;accent-color:#79aac4}
 .holiday-emoji{font-size:20px;text-align:center}
+.holiday-selected-emoji{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#eef6f9}
 .holiday-detail{grid-column:auto!important;min-width:0}
 .holiday-detail>b{display:flex;align-items:center;gap:7px;color:#667b8d;font-size:12px}
 .holiday-detail>small{display:block;margin-top:4px;color:#96a8b5;font-size:10px;line-height:1.5}

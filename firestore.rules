@@ -141,15 +141,49 @@ service cloud.firestore {
             validDate(data.birthdays[pair.partnerId]) &&
             data.updatedBy == request.auth.uid && data.updatedAt is timestamp;
         }
+        function validHolidaySettings(data) {
+          let pair = get(/databases/$(database)/documents/pairs/$(pairId)).data;
+          return pair.partnerId is string && pair.partnerId.size() > 0 &&
+            data.keys().hasOnly(['initialized', 'updatedBy', 'updatedAt']) &&
+            data.initialized == true && data.updatedBy == request.auth.uid &&
+            data.updatedAt is timestamp;
+        }
         allow create: if isPairMember(pairId) && (
           (settingId == 'rewards' &&
             request.resource.data.keys().hasOnly(['initialized', 'createdAt']) &&
             request.resource.data.initialized == true) ||
-          (settingId == 'dates' && validCoupleDates(request.resource.data))
+          (settingId == 'dates' && validCoupleDates(request.resource.data)) ||
+          (settingId == 'holidays' && validHolidaySettings(request.resource.data))
         );
-        allow update: if isPairMember(pairId) && settingId == 'dates' &&
-          validCoupleDates(request.resource.data);
+        allow update: if isPairMember(pairId) && (
+          (settingId == 'dates' && validCoupleDates(request.resource.data)) ||
+          (settingId == 'holidays' && validHolidaySettings(request.resource.data))
+        );
         allow delete: if false;
+      }
+
+      match /holidays/{holidayId} {
+        function validHoliday(data) {
+          let pair = get(/databases/$(database)/documents/pairs/$(pairId)).data;
+          return pair.partnerId is string && pair.partnerId.size() > 0 &&
+            data.keys().hasOnly(['name', 'calendar', 'month', 'day', 'selected', 'isDefault', 'updatedBy', 'updatedAt', 'createdAt']) &&
+            data.keys().hasAll(['name', 'calendar', 'month', 'day', 'selected', 'isDefault', 'updatedBy', 'updatedAt', 'createdAt']) &&
+            data.name is string && data.name.size() > 0 && data.name.size() <= 40 &&
+            data.calendar in ['solar', 'lunar'] && data.month is int && data.month >= 1 && data.month <= 12 &&
+            data.day is int && data.day >= 1 &&
+            ((data.calendar == 'solar' && (
+              (data.month in [1, 3, 5, 7, 8, 10, 12] && data.day <= 31) ||
+              (data.month in [4, 6, 9, 11] && data.day <= 30) ||
+              (data.month == 2 && data.day <= 29)
+            )) || (data.calendar == 'lunar' && data.day <= 30)) &&
+            data.selected is bool && data.isDefault is bool &&
+            data.updatedBy == request.auth.uid && data.updatedAt is timestamp && data.createdAt is timestamp;
+        }
+        allow read: if isPairMember(pairId);
+        allow create, update: if isPairMember(pairId) && validHoliday(request.resource.data);
+        allow delete: if isPairMember(pairId) &&
+          get(/databases/$(database)/documents/pairs/$(pairId)).data.partnerId is string &&
+          get(/databases/$(database)/documents/pairs/$(pairId)).data.partnerId.size() > 0;
       }
 
       match /tasks/{taskId} {

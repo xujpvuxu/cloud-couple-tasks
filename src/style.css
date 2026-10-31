@@ -152,3 +152,38 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .show-more-tasks{display:block;width:100%;min-height:44px;margin:8px 0 16px;border:1px solid #dceaf1;border-radius:10px;background:#f7fbfd;color:#5d879e;font-size:13px;font-weight:700}
 .show-more-tasks:hover,.published-task-group-heading button:hover{background:#eff7fa}
 @media(max-width:700px){.published-task-group{margin:12px 0 18px}.published-task-group-heading{padding:8px 9px}.published-task-group-heading h2,.published-task-group-heading button{font-size:14px}}
+
+.holiday-settings{margin:12px 0 18px;padding:22px;border:1px solid #e8eff3;border-radius:15px;background:linear-gradient(135deg,#f7fbfd,#fcf8fa)}
+.holiday-settings .settings-heading{align-items:flex-start}
+.holiday-toolbar,.holiday-form-actions{display:flex;flex-wrap:wrap;gap:8px}
+.holiday-restore-button,.holiday-actions button,.holiday-confirm button{min-height:44px;padding:8px 12px;border:1px solid #dbe9f0;border-radius:9px;background:#fff;color:#6d94a9;font:inherit;font-size:11px}
+.holiday-restore-button:disabled,.holiday-actions button:disabled,.holiday-confirm button:disabled{opacity:.55;cursor:not-allowed}
+.holiday-hint{margin:12px 0;color:#8799a8;font-size:11px;line-height:1.6}
+.holiday-form{max-width:560px;margin:16px 0;padding:16px;border:1px solid #e2edf2;border-radius:12px;background:#fff}
+.holiday-form h3{margin:0 0 10px;color:#64788b;font-size:14px}
+.holiday-form label{display:block;margin:10px 0;color:#788c9e;font-size:11px;font-weight:700}
+.holiday-form input,.holiday-form select{display:block;width:100%;min-height:44px;margin-top:6px;padding:9px 11px;border:1px solid #e2ebf0;border-radius:9px;background:#fff;color:#526a7d;font:14px inherit}
+.holiday-form input:focus,.holiday-form select:focus{outline:3px solid #dcecf4;border-color:#aacadb}
+.holiday-date-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.holiday-form-actions{margin-top:12px}
+.holiday-feedback{margin:10px 0;color:#648d78;font-size:11px;line-height:1.6}
+.holiday-feedback.error{color:#a57676}
+.holiday-confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0;padding:12px;border:1px solid #efdfd8;border-radius:10px;background:#fff9f6;color:#806c65;font-size:11px;line-height:1.6}
+.holiday-confirm span{flex:1 1 100%}
+.holiday-confirm button:first-of-type,.holiday-delete-confirm{border-color:#efdddd!important;background:#fcf5f5!important;color:#a16e72!important}
+.holiday-list{margin-top:16px}
+.holiday-item{grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:center}
+.holiday-select{display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.holiday-select input{width:18px;height:18px;margin:0;accent-color:#79aac4}
+.holiday-emoji{font-size:20px;text-align:center}
+.holiday-detail{grid-column:auto!important;min-width:0}
+.holiday-detail>b{display:flex;align-items:center;gap:7px;color:#667b8d;font-size:12px}
+.holiday-detail>small{display:block;margin-top:4px;color:#96a8b5;font-size:10px;line-height:1.5}
+.holiday-default-label{padding:2px 6px;border-radius:999px;background:#eef6f9;color:#7a9db0;font-size:9px;font-weight:600}
+.holiday-item-disabled{opacity:.68}
+.holiday-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:5px}
+.holiday-actions button{min-width:54px;padding:7px 9px}
+.holiday-actions .holiday-delete-button{border-color:#f0e2e2;background:#fdf7f7;color:#ad8585}
+.holiday-delete-prompt{color:#a57676;font-size:10px}
+.holiday-empty{padding:18px;text-align:center;color:#9aaab7;font-size:11px}
+@media(max-width:700px){.holiday-settings{padding:17px 14px}.holiday-settings .settings-heading{display:block}.holiday-toolbar{margin-top:10px}.holiday-toolbar button{flex:1}.holiday-form{padding:13px}.holiday-form input,.holiday-form select{font-size:16px}.holiday-item{grid-template-columns:35px minmax(0,1fr);gap:7px;padding:10px 8px}.holiday-detail{grid-column:2!important}.holiday-actions{grid-column:1/-1;justify-content:flex-end;border-top:1px solid #edf1f4;padding-top:6px}.holiday-actions button{flex:1}.holiday-delete-prompt{margin-right:auto}}

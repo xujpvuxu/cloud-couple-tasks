@@ -156,7 +156,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .holiday-settings{margin:12px 0 18px;padding:22px;border:1px solid #e8eff3;border-radius:15px;background:linear-gradient(135deg,#f7fbfd,#fcf8fa)}
 .holiday-settings .settings-heading{align-items:flex-start}
 .holiday-toolbar,.holiday-form-actions{display:flex;flex-wrap:wrap;gap:8px}
-.holiday-restore-button,.holiday-actions button,.holiday-confirm button{min-height:44px;padding:8px 12px;border:1px solid #dbe9f0;border-radius:9px;background:#fff;color:#6d94a9;font:inherit;font-size:11px}
+.holiday-restore-button,.holiday-collapse-toggle,.holiday-actions button,.holiday-confirm button{min-height:44px;padding:8px 12px;border:1px solid #dbe9f0;border-radius:9px;background:#fff;color:#6d94a9;font:inherit;font-size:11px}
 .holiday-restore-button:disabled,.holiday-actions button:disabled,.holiday-confirm button:disabled{opacity:.55;cursor:not-allowed}
 .holiday-hint{margin:12px 0;color:#8799a8;font-size:11px;line-height:1.6}
 .holiday-form{max-width:560px;margin:16px 0;padding:16px;border:1px solid #e2edf2;border-radius:12px;background:#fff}

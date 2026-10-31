@@ -156,8 +156,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .holiday-settings{margin:12px 0 18px;padding:22px;border:1px solid #e8eff3;border-radius:15px;background:linear-gradient(135deg,#f7fbfd,#fcf8fa)}
 .holiday-settings .settings-heading{align-items:flex-start}
 .holiday-toolbar,.holiday-form-actions{display:flex;flex-wrap:wrap;gap:8px}
-.holiday-restore-button,.holiday-collapse-toggle,.holiday-actions button,.holiday-confirm button{min-height:44px;padding:8px 12px;border:1px solid #dbe9f0;border-radius:9px;background:#fff;color:#6d94a9;font:inherit;font-size:11px}
-.holiday-restore-button:disabled,.holiday-actions button:disabled,.holiday-confirm button:disabled{opacity:.55;cursor:not-allowed}
+.holiday-restore-button,.holiday-collapse-toggle,.holiday-custom-button,.holiday-actions button,.holiday-confirm button{min-height:44px;padding:8px 12px;border:1px solid #dbe9f0;border-radius:9px;background:#fff;color:#6d94a9;font:inherit;font-size:11px}
+.holiday-restore-button:disabled,.holiday-custom-button:disabled,.holiday-actions button:disabled,.holiday-confirm button:disabled{opacity:.55;cursor:not-allowed}
 .holiday-hint{margin:12px 0;color:#8799a8;font-size:11px;line-height:1.6}
 .holiday-form{max-width:560px;margin:16px 0;padding:16px;border:1px solid #e2edf2;border-radius:12px;background:#fff}
 .holiday-form h3{margin:0 0 10px;color:#64788b;font-size:14px}
@@ -186,4 +186,26 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .holiday-actions .holiday-delete-button{border-color:#f0e2e2;background:#fdf7f7;color:#ad8585}
 .holiday-delete-prompt{color:#a57676;font-size:10px}
 .holiday-empty{padding:18px;text-align:center;color:#9aaab7;font-size:11px}
+.holiday-picker-backdrop{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:18px;background:#30465370;backdrop-filter:blur(3px)}
+.holiday-picker-dialog{display:flex;flex-direction:column;width:min(620px,100%);max-height:min(780px,calc(100dvh - 36px));padding:22px;border:1px solid #e5eef2;border-radius:18px;background:#fff;box-shadow:0 18px 60px #2f485033}
+.holiday-picker-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.holiday-picker-header small{color:#9bb8c6;font-size:9px;letter-spacing:1.5px}
+.holiday-picker-header h2{margin:5px 0;color:#61788a;font-size:20px}
+.holiday-picker-header p{margin:0;color:#91a1ad;font-size:12px;line-height:1.6}
+.holiday-picker-close{flex:none;width:44px;height:44px;border:0;border-radius:12px;background:#f3f8fa;color:#7d98a8;font-size:25px}
+.holiday-picker-search{display:block;margin:18px 0 10px;color:#788c9e;font-size:11px;font-weight:700}
+.holiday-picker-search input{display:block;width:100%;height:44px;margin-top:6px;padding:9px 12px;border:1px solid #e2ebf0;border-radius:10px;background:#fff;color:#526a7d;font:inherit;font-size:16px}
+.holiday-picker-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;overflow:auto;min-height:100px;padding:2px 3px 8px}
+.holiday-picker-option{display:flex;align-items:center;gap:9px;min-width:0;min-height:62px;padding:9px 10px;border:1px solid #edf1f4;border-radius:11px;background:#fff;cursor:pointer}
+.holiday-picker-option:hover{border-color:#cfe1e9;background:#f9fcfd}
+.holiday-picker-option input{flex:none;width:19px;height:19px;margin:0;accent-color:#79aac4}
+.holiday-picker-emoji{font-size:20px}
+.holiday-picker-name{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}
+.holiday-picker-name b{overflow:hidden;color:#667b8d;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+.holiday-picker-name small{color:#9aaab6;font-size:9px}
+.holiday-picker-added{flex:none;padding:4px 7px;border-radius:999px;background:#eef6f9;color:#7a9db0;font-size:9px}
+.holiday-picker-empty{grid-column:1/-1;padding:22px;text-align:center;color:#91a1ad;font-size:12px}
+.holiday-picker-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:14px;border-top:1px solid #edf1f4;color:#8294a1;font-size:11px}
+.holiday-picker-footer button{min-height:44px;padding:10px 16px}
+@media(max-width:700px){.holiday-picker-backdrop{align-items:flex-end;padding:0}.holiday-picker-dialog{width:100%;max-height:90dvh;padding:18px 14px max(16px,env(safe-area-inset-bottom));border-radius:18px 18px 0 0}.holiday-picker-header h2{font-size:18px}.holiday-picker-list{grid-template-columns:1fr;max-height:48dvh}.holiday-picker-option{min-height:56px}}
 @media(max-width:700px){.holiday-settings{padding:17px 14px}.holiday-settings .settings-heading{display:block}.holiday-toolbar{margin-top:10px}.holiday-toolbar button{flex:1}.holiday-form{padding:13px}.holiday-form input,.holiday-form select{font-size:16px}.holiday-item{grid-template-columns:35px minmax(0,1fr);gap:7px;padding:10px 8px}.holiday-detail{grid-column:2!important}.holiday-actions{grid-column:1/-1;justify-content:flex-end;border-top:1px solid #edf1f4;padding-top:6px}.holiday-actions button{flex:1}.holiday-delete-prompt{margin-right:auto}}

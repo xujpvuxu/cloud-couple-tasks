@@ -26,7 +26,7 @@
 
 ## 程式風格
 
-Vue 單檔元件使用 `<script setup>`、Composition API 與 JavaScript ES modules。沿用現有無分號風格、單引號字串及兩空格縮排。元件與頁面檔名使用 PascalCase（例如 `App.vue`）；一般 JavaScript 模組使用小寫檔名。樣式集中於 `src/style.css`，保持版面適配手機與桌面。
+Vue 單檔元件使用 `<script setup>`、Composition API 與 JavaScript ES modules。沿用現有無分號風格、單引號字串及兩空格縮排。元件與頁面檔名使用 PascalCase（例如 `App.vue`）；一般 JavaScript 模組使用小寫檔名。樣式集中於 `src/style.css`，保持版面適配手機與桌面。主要操作按鈕的觸控範圍至少 44px，表單文字在手機維持 16px；狀態訊息需清楚、對比足夠，並為鍵盤操作保留可見焦點。
 
 ## 測試與驗證
 

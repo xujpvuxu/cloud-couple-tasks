@@ -142,3 +142,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .dialog p{font-size:14px}
   .history-record small,.history-record time,.redemption-info small{font-size:12px}
 }
+
+.published-task-group{margin:14px 0 20px}
+.published-task-group-heading{display:flex;align-items:center;justify-content:space-between;margin:4px 0 8px;padding:9px 12px;border-bottom:1px solid #e4edf2}
+.published-task-group-heading h2,.published-task-group-heading button{margin:0;color:#5f7588;font-size:15px;font-weight:800}
+.published-task-group-heading h2 span,.published-task-group-heading button span{display:inline-grid;place-items:center;min-width:25px;height:25px;margin-left:6px;padding:0 7px;border-radius:999px;background:#eaf3f7;color:#628ba2;font-size:12px}
+.published-task-group-heading button{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;border:0;background:transparent;text-align:left}
+.published-task-group-heading button b{margin-left:auto;color:#668fa6;font-size:12px}
+.show-more-tasks{display:block;width:100%;min-height:44px;margin:8px 0 16px;border:1px solid #dceaf1;border-radius:10px;background:#f7fbfd;color:#5d879e;font-size:13px;font-weight:700}
+.show-more-tasks:hover,.published-task-group-heading button:hover{background:#eff7fa}
+@media(max-width:700px){.published-task-group{margin:12px 0 18px}.published-task-group-heading{padding:8px 9px}.published-task-group-heading h2,.published-task-group-heading button{font-size:14px}}

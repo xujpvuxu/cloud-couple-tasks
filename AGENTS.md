@@ -12,7 +12,7 @@
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
 - `.github/workflows/cleanup-records.yml`、`scripts/cleanup-records.mjs`：每日清理已結束超過七天的任務及兌換紀錄。
 - `docs/data-retention.md`：七天紀錄保留與清理設定說明。
-- `index.html`、`vite.config.js`：頁面入口及 Vite/GitHub Pages 路徑設定。
+- `index.html`、`vite.config.js`：頁面入口、favicon 角色圖示及 Vite/GitHub Pages 路徑設定。
 
 目前沒有獨立測試目錄或測試框架。
 

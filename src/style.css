@@ -175,14 +175,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .holiday-select{display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
 .holiday-select input{width:18px;height:18px;margin:0;accent-color:#79aac4}
 .holiday-detail{grid-column:auto!important;min-width:0}
-.holiday-detail>b{display:flex;align-items:center;gap:7px;color:#667b8d;font-size:12px}
-.holiday-detail>small{display:block;margin-top:4px;color:#96a8b5;font-size:10px;line-height:1.5}
+.holiday-detail>b{display:flex;align-items:center;gap:7px;color:#667b8d;font-size:15px}
+.holiday-detail>small{display:block;margin-top:5px;color:#8297a6;font-size:12px;line-height:1.5}
 .holiday-item-disabled{opacity:.68}
 .holiday-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:5px}
 .holiday-actions button{min-width:54px;padding:7px 9px}
 .holiday-actions .holiday-delete-button{border-color:#f0e2e2;background:#fdf7f7;color:#ad8585}
 .holiday-delete-prompt{color:#a57676;font-size:10px}
 .holiday-empty{padding:18px;text-align:center;color:#9aaab7;font-size:11px}
-@media(max-width:700px){.holiday-settings{padding:17px 14px}.holiday-settings .settings-heading{display:block}.holiday-toolbar{margin-top:10px}.holiday-toolbar button{flex:1}.holiday-form{padding:13px}.holiday-form input,.holiday-form select{font-size:16px}.holiday-item{grid-template-columns:35px minmax(0,1fr);gap:7px;padding:10px 8px}.holiday-detail{grid-column:1!important}.holiday-actions{grid-column:1/-1;justify-content:flex-end;border-top:1px solid #edf1f4;padding-top:6px}.holiday-actions button{flex:1}.holiday-delete-prompt{margin-right:auto}}
+@media(max-width:700px){.holiday-settings{padding:17px 14px}.holiday-settings .settings-heading{display:block}.holiday-toolbar{margin-top:10px}.holiday-toolbar button{flex:1}.holiday-form{padding:13px}.holiday-form input,.holiday-form select{font-size:16px}.holiday-item{grid-template-columns:minmax(0,1fr);gap:8px;padding:12px}.holiday-detail{grid-column:1!important}.holiday-detail>b{font-size:14px}.holiday-detail>small{font-size:11px}.holiday-actions{grid-column:1/-1;justify-content:flex-end;border-top:1px solid #edf1f4;padding-top:8px}.holiday-actions button{flex:1}.holiday-delete-prompt{margin-right:auto}}
 
 .holiday-unselected-label{margin-left:6px;color:#a0acb5;font-size:9px;font-weight:500}

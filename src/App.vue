@@ -9,7 +9,7 @@ const assetUrl = path => import.meta.env.BASE_URL + path.replace(/^\//,'')
 const cloudCatImage = assetUrl('images/cloud-cat.png')
 const pickedIcons = [...iconFiles].sort(()=>Math.random()-.5).slice(0,6).map(file=>assetUrl('icons/'+encodeURIComponent(file)))
 const sidebarIcon = assetUrl('icons/side-cinnamoroll.png')
-const homepageIcon = assetUrl('icons/homepage-cinnamoroll.jpg')
+const homepageIcon = sidebarIcon
 const legacyHolidayDefaults = [{id:'new-year',month:1,day:1,name:'元旦',calendar:'solar'},{id:'valentines-day',month:2,day:14,name:'情人節',calendar:'solar'},{id:'white-day',month:3,day:14,name:'白色情人節',calendar:'solar'},{id:'520-day',month:5,day:20,name:'520 我愛你日',calendar:'solar'},{id:'qixi',month:7,day:7,name:'七夕',calendar:'lunar'},{id:'christmas-eve',month:12,day:24,name:'平安夜',calendar:'solar'},{id:'christmas',month:12,day:25,name:'聖誕節',calendar:'solar'},{id:'new-years-eve',month:12,day:31,name:'跨年夜',calendar:'solar'}]
 const cleanedHolidayPairs = new Set()
 const tabs = ['首頁','任務','獎品','兌換','紀錄','設定'].map((label,i)=>[pickedIcons[i],label])

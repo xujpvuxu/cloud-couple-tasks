@@ -73,7 +73,7 @@ const yesterdayTasks=computed(()=>{clock.value;return tasks.value.filter(t=>['op
 const yesterdayTaskIds = computed(()=>new Set(yesterdayTasks.value.map(task=>task.id)))
 const shown = computed(()=>{clock.value;return section.value==='我的任務'?tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid&&!expired(t)&&!yesterdayTaskIds.value.has(t.id)):section.value==='驗收任務'?tasks.value.filter(t=>t.status==='review'&&t.creatorId===user.value?.uid):tasks.value.filter(t=>t.creatorId===user.value?.uid&&(t.kind==='每日固定'?t.rootId===t.id:!expired(t)))})
 const myTaskCount = computed(()=>{clock.value;return tasks.value.filter(t=>['open','rejected'].includes(t.status)&&t.receiverId===user.value?.uid&&!expired(t)).length})
-const myPublishedTaskCount = computed(()=>{clock.value;return tasks.value.filter(t=>t.creatorId===user.value?.uid&&(t.kind==='每日固定'?t.rootId===t.id:!expired(t))).length})
+const myPublishedTaskCount = computed(()=>{clock.value;return tasks.value.filter(t=>t.creatorId===user.value?.uid&&(t.kind==='每日固定'?t.rootId===t.id:!expired(t)&&!['done','rejected'].includes(t.status))).length})
 const reviewTaskCount = computed(()=>tasks.value.filter(t=>t.status==='review'&&t.creatorId===user.value?.uid).length)
 const form=ref({email:'',password:'',nickname:''}), authMode=ref('login'), error=ref(''), taskForm=ref({title:'',note:'',kind:'臨時發布',due:'',rewardType:'fixed',points:5}), invite=ref(''), activeInviteCode=ref(''), rejectReason=ref(''), notice=ref('')
 const dateSaveMessage=ref(''), dateSaving=ref(false), dateSaveError=ref(false)

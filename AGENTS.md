@@ -12,7 +12,7 @@
 - `functions/index.js`：驗證 Firebase 登入、配對與基金後端文件，再代查 MoneyDJ；基金報價 API 僅接受允許來源。
 - `firebase.json`、`.firebaserc`、`functions/`：Firebase Cloud Functions 部署設定與 Node.js 後端依賴。
 - `docs/fund-nav.md`：基金淨值代理的驗證方式、CORS 來源與部署流程。
-- 「股票」頁管理配對共用的基金資料，儲存於 `pairs/{pairId}/funds`，欄位為基金名稱、MoneyDJ 基金代碼、本金與庫存單位數；淨值查詢最近 14 個日曆天。
+- 「股票」頁管理配對共用的基金資料，儲存於 `pairs/{pairId}/funds`，欄位為基金名稱、MoneyDJ 基金代碼、本金與庫存單位數；卡片依本金由高到低排序；淨值查詢最近 14 個日曆天。
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
 - `.github/workflows/cleanup-records.yml`、`scripts/cleanup-records.mjs`：每日清理已結束超過七天的任務及兌換紀錄。
 - `docs/data-retention.md`：七天紀錄保留與清理設定說明。

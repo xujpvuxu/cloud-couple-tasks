@@ -9,6 +9,7 @@
 - `public/backgrounds/README.md`：背景素材與使用方式；目前固定使用 `public/backgrounds/762886.jpg`。
 - public/icons/side-cinnamoroll.png：固定用於首頁主視覺與日期下方角色圖；導覽列圖示仍隨機挑選。homepage-cinnamoroll.jpg 保留為素材，不供這兩處使用。
 - `firestore.rules`：Firestore 存取規則；修改資料模型時同步檢查權限。
+- 「股票」頁管理配對共用的基金資料，儲存於 `pairs/{pairId}/funds`，欄位為基金名稱、MoneyDJ 基金代碼、本金與庫存單位數；淨值查詢最近 14 個日曆天。
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
 - `.github/workflows/cleanup-records.yml`、`scripts/cleanup-records.mjs`：每日清理已結束超過七天的任務及兌換紀錄。
 - `docs/data-retention.md`：七天紀錄保留與清理設定說明。

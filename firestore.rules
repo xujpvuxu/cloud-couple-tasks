@@ -68,6 +68,19 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.ownerId == request.auth.uid &&
         resource.data.partnerId == null;
 
+      match /funds/{fundId} {
+        function validFund(data) {
+          return data.keys().hasOnly(['name', 'code', 'principal', 'units']) &&
+            data.name is string && data.name.size() > 0 && data.name.size() <= 80 &&
+            data.code is string && data.code.size() > 0 && data.code.size() <= 40 &&
+            data.principal is number && data.principal >= 0 &&
+            data.units is number && data.units >= 0;
+        }
+        allow read: if isPairMember(pairId);
+        allow create, update: if isPairMember(pairId) && validFund(request.resource.data);
+        allow delete: if isPairMember(pairId);
+      }
+
       match /rewards/{rewardId} {
         function validReward(data) {
           return data.keys().hasOnly(['title', 'points', 'emoji', 'createdAt', 'updatedAt']) &&

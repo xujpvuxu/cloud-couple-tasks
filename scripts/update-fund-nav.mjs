@@ -1,11 +1,12 @@
 import { applicationDefault, initializeApp } from 'firebase-admin/app'
-import { FieldValue, getFirestore } from 'firebase-admin/firestore'
+import { FieldValue, getFirestore, Timestamp } from 'firebase-admin/firestore'
 
 const projectId = process.env.FIREBASE_PROJECT_ID
 if (!projectId) throw new Error('FIREBASE_PROJECT_ID is required.')
 
 initializeApp({ credential: applicationDefault(), projectId })
 const db = getFirestore()
+const requestsOnly = process.env.FUND_NAV_REQUESTS_ONLY === 'true'
 const DAY_MS = 24 * 60 * 60 * 1000
 
 function taipeiDate(date = new Date()) {
@@ -75,9 +76,46 @@ let pruned = 0
 
 for (const pair of pairs.docs) {
   const funds = await pair.ref.collection('funds').get()
+  const requestCollection = pair.ref.collection('navRequests')
+  const [requests, expiredRequests] = await Promise.all([
+    requestCollection.where('status', '==', 'pending').get(),
+    requestCollection.where('processedAt', '<', Timestamp.fromMillis(Date.now() - 7 * DAY_MS)).get(),
+  ])
+  for (const request of requests.docs) {
+    const requestedAt = request.data().requestedAt?.toMillis?.() || 0
+    if (requestedAt && requestedAt < Date.now() - DAY_MS) {
+      await request.ref.delete()
+    }
+  }
+  for (let offset = 0; offset < expiredRequests.docs.length; offset += 400) {
+    const batch = db.batch()
+    expiredRequests.docs.slice(offset, offset + 400).forEach(request => batch.delete(request.ref))
+    await batch.commit()
+  }
+  const requestsByFund = new Map()
+  for (const request of requests.docs) {
+    const requestedAt = request.data().requestedAt?.toMillis?.() || 0
+    if (requestedAt && requestedAt < Date.now() - DAY_MS) continue
+    const fundId = request.data().fundId
+    const list = requestsByFund.get(fundId) || []
+    list.push(request.ref)
+    requestsByFund.set(fundId, list)
+  }
   for (const fund of funds.docs) {
+    const fundRequests = requestsByFund.get(fund.id) || []
+    if (requestsOnly && !fundRequests.length) continue
     const code = fund.data().code
-    if (typeof code !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(code)) continue
+    if (typeof code !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(code)) {
+      if (fundRequests.length) {
+        const batch = db.batch()
+        fundRequests.forEach(requestRef => batch.update(requestRef, {
+          status: 'invalid-fund-code',
+          processedAt: FieldValue.serverTimestamp(),
+        }))
+        await batch.commit()
+      }
+      continue
+    }
     checked += 1
     const quotesRef = fund.ref.collection('nav')
     pruned += await pruneQuotes(quotesRef, cutoff)
@@ -100,6 +138,25 @@ for (const pair of pairs.docs) {
       }
       if (rows.some(row => row.date === todayKey)) fetched += 1
     }
+    if (fundRequests.length) {
+      const status = todaysQuote.exists ? 'already-updated'
+        : await quotesRef.doc(todayKey).get().then(snapshot => snapshot.exists ? 'updated' : 'no-data')
+      const batch = db.batch()
+      fundRequests.forEach(requestRef => batch.update(requestRef, {
+        status,
+        processedAt: FieldValue.serverTimestamp(),
+      }))
+      await batch.commit()
+    }
+  }
+  for (const [fundId, requestRefs] of requestsByFund) {
+    if (funds.docs.some(fund => fund.id === fundId)) continue
+    const batch = db.batch()
+    requestRefs.forEach(requestRef => batch.update(requestRef, {
+      status: 'fund-missing',
+      processedAt: FieldValue.serverTimestamp(),
+    }))
+    await batch.commit()
   }
 }
 

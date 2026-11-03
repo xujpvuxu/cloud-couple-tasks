@@ -15,7 +15,7 @@
 - 「股票」頁管理配對共用的基金資料，儲存於 `pairs/{pairId}/funds`，欄位為基金名稱、MoneyDJ 基金代碼、本金與庫存單位數；卡片依本金由高到低排序；淨值存於基金文件的 `nav` 子集合，保留最近 14 個日曆日。
 - `.github/workflows/deploy.yml`：推送至 `main` 後建置並部署到 GitHub Pages。
 - `.github/workflows/cleanup-records.yml`、`scripts/cleanup-records.mjs`：每日清理已結束超過七天的任務及兌換紀錄。
-- 基金淨值排程於週一至週五台灣時間 19:00 至 23:30 每半小時執行；當日淨值已存在時略過 API，並清除 14 天保留期限之外的文件。兩個 Firebase Admin 工作流程共用 `FIREBASE_SERVICE_ACCOUNT` GitHub repository secret。
+- 基金淨值排程於週一至週五台灣時間 19:00 至 23:30 每半小時執行；當日淨值已存在時略過 API，並清除 14 天保留期限之外的文件。網頁可送出手動檢查請求，由每五分鐘排程取件。兩個 Firebase Admin 工作流程共用 `FIREBASE_SERVICE_ACCOUNT` GitHub repository secret。
 - `docs/data-retention.md`：七天紀錄保留與清理設定說明。
 - `index.html`、`vite.config.js`：頁面入口、favicon 角色圖示及 Vite/GitHub Pages 路徑設定。
 

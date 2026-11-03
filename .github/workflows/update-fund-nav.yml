@@ -1,0 +1,36 @@
+name: Update fund NAV
+on:
+  schedule:
+    - cron: '*/30 11-15 * * 1-5'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fund-nav-update
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - name: Remind to configure credentials
+        if: ${{ env.FIREBASE_SERVICE_ACCOUNT == '' }}
+        run: echo "Set FIREBASE_SERVICE_ACCOUNT in repository Actions secrets to enable NAV sync."
+      - uses: actions/checkout@v4
+        if: ${{ env.FIREBASE_SERVICE_ACCOUNT != '' }}
+      - uses: actions/setup-node@v4
+        if: ${{ env.FIREBASE_SERVICE_ACCOUNT != '' }}
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        if: ${{ env.FIREBASE_SERVICE_ACCOUNT != '' }}
+      - uses: google-github-actions/auth@v2
+        if: ${{ env.FIREBASE_SERVICE_ACCOUNT != '' }}
+        with:
+          credentials_json: ${{ env.FIREBASE_SERVICE_ACCOUNT }}
+      - run: npm run update:fund-nav
+        if: ${{ env.FIREBASE_SERVICE_ACCOUNT != '' }}
+        env:
+          FIREBASE_PROJECT_ID: cloud-couple-tasks

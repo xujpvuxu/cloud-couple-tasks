@@ -79,6 +79,11 @@ service cloud.firestore {
         allow read: if isPairMember(pairId);
         allow create, update: if isPairMember(pairId) && validFund(request.resource.data);
         allow delete: if isPairMember(pairId);
+
+        match /nav/{quoteId} {
+          allow read: if isPairMember(pairId);
+          allow write: if false;
+        }
       }
 
       match /rewards/{rewardId} {

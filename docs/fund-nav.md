@@ -1,15 +1,15 @@
-# 基金淨值查詢
+# 基金淨值排程與保存
 
-股票頁使用 Firebase HTTP Function `fundNav` 代查 MoneyDJ，避免瀏覽器跨網域讀取時遭 CORS 阻擋。基金卡片依本金由高到低排序。前端傳入基金文件 ID 和日期範圍；Function 驗證 Firebase 登入身分、配對關係及基金文件，再以 Firestore 內的基金代碼查詢 MoneyDJ。淨值結果不會寫回 Firestore。
+「股票」頁從 Firestore 讀取淨值，不會由瀏覽器直接呼叫 MoneyDJ，因此不受瀏覽器 CORS 限制。配對基金仍存放於 `pairs/{pairId}/funds`；每日淨值放在 `pairs/{pairId}/funds/{fundId}/nav/{YYYYMMDD}`，欄位為 `date`、`nav` 和 `updatedAt`。
 
-Function 僅接受 GitHub Pages 網域與本機 Vite 開發網域的跨來源請求。日期範圍最多 31 天，回應快取五分鐘。呼叫時須附 Firebase Authentication ID token。
+`.github/workflows/update-fund-nav.yml` 於週一至週五台灣時間 19:00 至 23:30 每半小時啟動一次。每檔基金當天已有淨值文件時，排程略過 MoneyDJ；若尚未取得當日資料，排程會再查詢，直到取得為止。每天最早 19:00 的排程會刪除 14 天保留期限以外的淨值文件。保留期間包含今天，共 14 個日曆日。
 
-部署至 `cloud-couple-tasks`：
+工作流程使用 GitHub Actions 執行環境與 Firebase Admin SDK，不使用 Cloud Functions。第一次啟用前，需在 GitHub 專案 `Settings → Secrets and variables → Actions` 建立 `FIREBASE_SERVICE_ACCOUNT` repository secret，值為具備此 Firebase 專案 Firestore 讀寫權限的服務帳戶 JSON。此密鑰亦供既有任務紀錄清理工作流程使用；不要提交至 Git 或貼在對話中。設定完成後可在 Actions 手動執行 `Update fund NAV`。
 
-```powershell
-npx firebase-tools deploy --only functions:fundNav --project cloud-couple-tasks
+Firestore 規則只允許配對成員讀取 `nav` 文件，客戶端不可新增、修改或刪除；排程使用 Admin SDK 寫入。規則檔由 `firebase.json` 的 `firestore.rules` 設定部署。排程若遇到 MoneyDJ 暫時錯誤，該次工作會失敗，下一個半小時排程會重試。GitHub Actions 排程可能延遲，並非精準即時服務。
+
+手動檢查腳本需先用 `google-github-actions/auth` 或其他安全方式提供 Firebase Admin 憑證，再執行：
+
+```sh
+FIREBASE_PROJECT_ID=cloud-couple-tasks npm run update:fund-nav
 ```
-
-Function 區域為 `asia-east1`，線上端點為 `https://asia-east1-cloud-couple-tasks.cloudfunctions.net/fundNav`。
-
-部署 Cloud Functions 需要 Firebase Blaze 方案並連結 Cloud Billing 帳戶；Function 有每月免費用量額度，超額用量和部署映像儲存可能計費。部署前應在 Google Cloud 設定預算通知。

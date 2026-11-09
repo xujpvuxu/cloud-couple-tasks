@@ -18,6 +18,7 @@ async function processTask(snapshot) {
     const current = await transaction.get(taskRef)
     if (!current.exists) return
     const task = current.data()
+    const isDailyRoot = task.kind === '每日固定' && task.rootId === taskRef.id
     if (task.status === 'done') {
       const accountRef = db.doc(`users/${task.receiverId}`)
       const account = await transaction.get(accountRef)
@@ -28,19 +29,19 @@ async function processTask(snapshot) {
           pointsBalance: Number(account.data().pointsBalance || 0) + points,
           pointsEventTaskId: taskRef.id,
         })
-        if (isOlderThanWeek(task.reviewedAt || task.completedAt || task.createdAt)) {
+        if (!isDailyRoot && isOlderThanWeek(task.reviewedAt || task.completedAt || task.createdAt)) {
           transaction.delete(taskRef)
         } else {
           transaction.update(taskRef, { pointsCredited: true })
         }
         return
       }
-      if (isOlderThanWeek(task.reviewedAt || task.completedAt || task.createdAt)) {
+      if (!isDailyRoot && isOlderThanWeek(task.reviewedAt || task.completedAt || task.createdAt)) {
         transaction.delete(taskRef)
       }
       return
     }
-    if (task.status === 'rejected' &&
+    if (!isDailyRoot && task.status === 'rejected' &&
         isOlderThanWeek(task.rejectedAt || task.createdAt)) {
       transaction.delete(taskRef)
     }

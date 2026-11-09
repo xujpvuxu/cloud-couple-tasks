@@ -198,5 +198,4 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(max-width:700px){.holiday-settings{padding:17px 14px}.holiday-settings .settings-heading{display:block}.holiday-toolbar{margin-top:10px}.holiday-toolbar button{flex:1}.holiday-form{padding:13px}.holiday-form input,.holiday-form select{font-size:16px}.holiday-item{grid-template-columns:minmax(0,1fr);gap:8px;padding:12px}.holiday-detail{grid-column:1!important}.holiday-detail>b{font-size:16px}.holiday-detail>small{font-size:15px}.holiday-actions{grid-column:1/-1;justify-content:flex-end;border-top:1px solid #edf1f4;padding-top:8px}.holiday-actions button{flex:1}.holiday-delete-prompt{margin-right:auto}}
 
 .holiday-unselected-label{margin-left:6px;color:#a0acb5;font-size:9px;font-weight:500}
-.mobile-publish-task{display:none}
-@media(max-width:700px){.mobile-publish-task{display:block;position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:4;min-height:44px;padding:10px 16px;border:0;border-radius:24px;background:#679bbb;color:#fff;font-size:14px;font-weight:700;box-shadow:0 5px 16px #405b7440}.mobile-publish-task:focus-visible{outline:3px solid #345e78;outline-offset:3px}}
+@media(max-width:700px){.bar:not(.reward-bar)>.primary.mobile-publish-hidden{display:none}}
